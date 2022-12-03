@@ -8,6 +8,8 @@ export const readRawData = (filePath) =>
     encoding: "utf-8",
   });
 
+export const getCharCode = (input) => input.charCodeAt(0);
+
 const lowerCasePattern = /^[a-z]{1,}$/;
 const upperCasePattern = /^[A-Z]{1,}$/;
 const digitPattern = /^[0-9]{1}$/;

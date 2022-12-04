@@ -8,6 +8,9 @@ export const readRawData = (filePath) =>
     encoding: "utf-8",
   });
 
+export const extractNonEmptyLines = (input) =>
+  input.split("\n").filter(Boolean);
+
 export const getCharCode = (input) => input.charCodeAt(0);
 
 const lowerCasePattern = /^[a-z]{1,}$/;

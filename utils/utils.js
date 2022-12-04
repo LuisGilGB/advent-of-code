@@ -75,6 +75,8 @@ export const allItemsAreEquals = (items) =>
 export const allItemsAbsolutesAreEquals = (items) =>
   items.slice(1).every((item) => Math.abs(item) === Math.abs(items[0]));
 
+export const buildSetFromString = (input) => new Set(input.split(""));
+
 export const buildMapFromArrayItems = (items) =>
   items.reduce((map, item) => {
     map.set(item, true);

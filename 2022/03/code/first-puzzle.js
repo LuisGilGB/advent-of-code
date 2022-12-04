@@ -1,4 +1,5 @@
 import {
+  buildSetFromString,
   getCharCode,
   isUpperCase,
   readRawData,
@@ -21,14 +22,13 @@ export const getOffset = (char) =>
     ? UPPER_CASE_CHART_CODE_OFFSET
     : LOWER_CASE_CHART_CODE_OFFSET;
 
-export const getRucksacks = (input) =>
-  input
-    .split("\n")
-    .filter(Boolean)
-    .map((row) => ({
-      firstCompartment: new Set(row.slice(0, row.length / 2).split("")),
-      secondCompartment: new Set(row.slice(row.length / 2).split("")),
-    }));
+export const getRucksacks = (input) => input.split("\n").filter(Boolean);
+
+export const splitInHalves = (input) =>
+  input.map((row) => ({
+    firstCompartment: buildSetFromString(row.slice(0, row.length / 2)),
+    secondCompartment: buildSetFromString(row.slice(row.length / 2)),
+  }));
 
 const getRepeatedItemType = ({ firstCompartment, secondCompartment }) => {
   let res;
@@ -48,5 +48,11 @@ export const getPriority = (input) =>
 const raw = readRawData("../2022/03/data/data");
 
 console.log(
-  run(getRucksacks, getRepeatedItemTypes, getPriority, sumArrayItems)(raw)
+  run(
+    getRucksacks,
+    splitInHalves,
+    getRepeatedItemTypes,
+    getPriority,
+    sumArrayItems
+  )(raw)
 );

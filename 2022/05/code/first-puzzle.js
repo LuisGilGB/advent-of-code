@@ -9,7 +9,7 @@ const MOVE_PARAM_INDEX = 1;
 const FROM_PARAM_INDEX = 3;
 const TO_PARAM_INDEX = 5;
 
-const extractExerciseData = (rawInput) => {
+export const extractExerciseData = (rawInput) => {
   const [rawInitial, rawMoves] = rawInput.split("\n\n");
   return {
     initial: parseInitial(rawInitial),
@@ -53,17 +53,24 @@ const parseMoves = (rawMoves) => {
   return moves;
 };
 
-const runCrane = ({ initial, moves }) => {
-  const { stacks: initialStacks } = initial;
-  const stacks = { ...initialStacks };
-  moves.forEach(({ move, from, to }) => {
-    stacks[to] = [...stacks[to], ...stacks[from].slice(-move).reverse()];
-    stacks[from] = stacks[from].slice(0, -move);
-  });
-  return stacks;
-};
+export const runCrane =
+  ({ oneAtATime = false } = {}) =>
+  ({ initial, moves }) => {
+    const { stacks: initialStacks } = initial;
+    const stacks = { ...initialStacks };
+    moves.forEach(({ move, from, to }) => {
+      stacks[to] = [
+        ...stacks[to],
+        ...(oneAtATime
+          ? stacks[from].slice(-move).reverse()
+          : stacks[from].slice(-move)),
+      ];
+      stacks[from] = stacks[from].slice(0, -move);
+    });
+    return stacks;
+  };
 
-const readTops = (stacks) =>
+export const readTops = (stacks) =>
   Object.values(stacks)
     .map((stack) => stack.at(-1))
     .join("");
@@ -72,7 +79,7 @@ console.log(
   run(
     readRawData,
     extractExerciseData,
-    runCrane,
+    runCrane({ oneAtATime: true }),
     readTops
   )("../2022/05/data/data")
 );

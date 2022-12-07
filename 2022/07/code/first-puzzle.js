@@ -148,7 +148,7 @@ export const listDirectoriesMetadata = (fileSystemTree) => {
 
 const hasLessSizeThan = (capSize) => (directory) => directory.size < capSize;
 
-const getSize = (item) => item.size;
+export const getSize = (item) => item.size;
 
 console.log(
   run(

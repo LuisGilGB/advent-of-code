@@ -23,6 +23,11 @@ export const filter =
   (input = []) =>
     input.filter(fn);
 
+export const sort =
+  (fn) =>
+  (input = []) =>
+    input.sort((a, b) => fn(a) - fn(b));
+
 const lowerCasePattern = /^[a-z]{1,}$/;
 const upperCasePattern = /^[A-Z]{1,}$/;
 const digitPattern = /^[0-9]{1}$/;
@@ -47,6 +52,8 @@ export const negate =
     !fn(...args);
 
 export const count = (input) => input.length;
+
+export const getNth = (n) => (array) => array[n];
 
 export const getLast = (array) => array[array.length - 1];
 

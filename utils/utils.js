@@ -13,6 +13,16 @@ export const extractNonEmptyLines = (input) =>
 
 export const getCharCode = (input) => input.charCodeAt(0);
 
+export const map =
+  (fn) =>
+  (input = []) =>
+    input.map(fn);
+
+export const filter =
+  (fn) =>
+  (input = []) =>
+    input.filter(fn);
+
 const lowerCasePattern = /^[a-z]{1,}$/;
 const upperCasePattern = /^[A-Z]{1,}$/;
 const digitPattern = /^[0-9]{1}$/;

@@ -1,52 +1,37 @@
 import {
   countBy,
-  extractNonEmptyLines,
   flatten,
   isTrue,
-  map,
+  mapMatrixBy,
   numberify,
+  parseMatrixMappingBy,
   readRawData,
   run,
-  transpose,
 } from "../../../utils/utils";
-
-export const splitCells = (treesRow) => treesRow.split("").map(numberify);
 
 const hasHigherTreeFactory =
   (ownHeight) =>
   (inBetweenHeights = []) =>
     inBetweenHeights.some((height) => height >= ownHeight);
 
-const mapTreesMatrixToVisibility = (treesMatrix) => {
-  const transposedMatrix = transpose(treesMatrix);
-  return treesMatrix.map((treesRow, rowIndex) =>
-    treesRow.map((treeHeight, colIndex) => {
-      const treesColumn = transposedMatrix[colIndex];
-      const top = treesColumn.slice(0, rowIndex);
-      const left = treesRow.slice(0, colIndex);
-      const bottom = treesColumn.slice(rowIndex + 1);
-      const right = treesRow.slice(colIndex + 1);
+const isVisible = (treeHeight, { rowIndex, colIndex, row, column }) => {
+  const hasHigher = hasHigherTreeFactory(treeHeight);
 
-      const hasHigher = hasHigherTreeFactory(treeHeight);
+  const hasHigherAt = {
+    north: hasHigher(column.slice(0, rowIndex)),
+    south: hasHigher(column.slice(rowIndex + 1)),
+    east: hasHigher(row.slice(colIndex + 1)),
+    west: hasHigher(row.slice(0, colIndex)),
+  };
 
-      const higherTreesCheckArray = [
-        hasHigher(top),
-        hasHigher(left),
-        hasHigher(bottom),
-        hasHigher(right),
-      ];
-
-      return higherTreesCheckArray.some((hasHigher) => !hasHigher);
-    })
-  );
+  return Object.values(hasHigherAt).some((hasHigher) => !hasHigher);
 };
 
 console.log(
   run(
     readRawData,
-    extractNonEmptyLines,
-    map(splitCells),
-    mapTreesMatrixToVisibility,
+    parseMatrixMappingBy(numberify),
+    mapMatrixBy(isVisible),
     flatten,
     countBy(isTrue)
   )("../2022/08/data/data")

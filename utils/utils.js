@@ -113,6 +113,18 @@ export const buildMapFromArrayItems = (items) =>
     return map;
   }, new Map());
 
+export const parseMatrix = (rawInput) =>
+  run(
+    extractNonEmptyLines,
+    map((row) => row.split(""))
+  )(rawInput);
+
+export const parseMatrixMappingBy = (fn) => (rawInput) =>
+  run(
+    extractNonEmptyLines,
+    map((row) => row.split("").map(fn))
+  )(rawInput);
+
 export const transpose = (matrix) =>
   matrix.map((row, rowIndex) =>
     row.map((cell, colIndex) => matrix[colIndex][rowIndex])

@@ -1,13 +1,12 @@
 import {
-  extractNonEmptyLines,
   flatten,
   getMax,
-  map,
   mapMatrixBy,
+  numberify,
+  parseMatrixMappingBy,
   readRawData,
   run,
 } from "../../../utils/utils";
-import { splitCells } from "./first-puzzle";
 
 const countTreesInSightFactory =
   (treeHeight) =>
@@ -45,8 +44,7 @@ const calculateScenicScore = (
 console.log(
   run(
     readRawData,
-    extractNonEmptyLines,
-    map(splitCells),
+    parseMatrixMappingBy(numberify),
     mapMatrixBy(calculateScenicScore),
     flatten,
     getMax

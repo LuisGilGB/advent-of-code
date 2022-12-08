@@ -28,6 +28,16 @@ export const sort =
   (input = []) =>
     input.sort((a, b) => fn(a) - fn(b));
 
+export const countBy =
+  (fn) =>
+  (input = []) =>
+    input.reduce((acc, item) => (fn(item) ? acc + 1 : acc), 0);
+
+export const flatten = (array = []) => array.flat();
+
+export const isTrue = (input) => !!input;
+export const isFalse = (input) => !input;
+
 const lowerCasePattern = /^[a-z]{1,}$/;
 const upperCasePattern = /^[A-Z]{1,}$/;
 const digitPattern = /^[0-9]{1}$/;

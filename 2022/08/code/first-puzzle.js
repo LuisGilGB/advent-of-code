@@ -19,8 +19,8 @@ const hasHigherTreeFactory =
 
 const mapTreesMatrixToVisibility = (treesMatrix) => {
   const transposedMatrix = transpose(treesMatrix);
-  return treesMatrix.map((treesRow, rowIndex, rows) =>
-    treesRow.map((treeHeight, colIndex, rowCells) => {
+  return treesMatrix.map((treesRow, rowIndex) =>
+    treesRow.map((treeHeight, colIndex) => {
       const treesColumn = transposedMatrix[colIndex];
       const top = treesColumn.slice(0, rowIndex);
       const left = treesRow.slice(0, colIndex);

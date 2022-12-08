@@ -118,6 +118,25 @@ export const transpose = (matrix) =>
     row.map((cell, colIndex) => matrix[colIndex][rowIndex])
   );
 
+export const mapMatrixBy = (fn) => (matrix) => {
+  const transposedMatrix = transpose(matrix);
+
+  return matrix.map((row, rowIndex) =>
+    row.map((item, colIndex) =>
+      fn(
+        item,
+        {
+          rowIndex,
+          colIndex,
+          row,
+          column: transposedMatrix[colIndex],
+        },
+        matrix
+      )
+    )
+  );
+};
+
 export const checkEveryMatrixCellIsEqualTo = (targetValue) => (matrix) =>
   matrix.every((row) => row.every((cell) => cell === targetValue));
 

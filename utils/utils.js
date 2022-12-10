@@ -49,6 +49,8 @@ export const isNumber = (input) => numberPattern.test(input);
 
 export const numberify = (value) => +value;
 
+export const normalizeNumber = (n) => (n > 0 ? 1 : n < 0 ? -1 : 0);
+
 export const buildNumbersArray = (raw) => raw.split(SEPARATOR).map(numberify);
 
 export const run =
@@ -89,8 +91,16 @@ export const filterUniqueItems = (input) =>
       ![...arr.slice(0, i), ...arr.slice(i + 1)].includes(value)
   );
 
+export const normalizeArray = map(normalizeNumber);
+
 export const sumArrayItems = (input) =>
   input.reduce((acc, item) => acc + item, 0);
+
+export const sumArrays = (array1, array2) =>
+  array1.map((item, i) => item + array2[i]);
+
+export const substractArrays = (array1, array2) =>
+  array1.map((item, i) => item - array2[i]);
 
 export const parseBin = (stringBin) => parseInt(stringBin, 2);
 

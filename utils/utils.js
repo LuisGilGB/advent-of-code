@@ -3,6 +3,8 @@ const path = require("path");
 
 const SEPARATOR = ",";
 
+export const identity = (input) => input;
+
 export const readRawData = (filePath) =>
   readFileSync(path.join(__dirname, filePath), {
     encoding: "utf-8",
@@ -24,7 +26,7 @@ export const filter =
     input.filter(fn);
 
 export const sort =
-  (fn) =>
+  (fn = identity) =>
   (input = []) =>
     input.sort((a, b) => fn(a) - fn(b));
 

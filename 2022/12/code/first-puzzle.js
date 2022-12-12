@@ -43,7 +43,7 @@ export const calculateGraphMap =
     ...builGraphdMapForDijkstra(weightPredicate)(input.heightsMatrix),
   });
 
-const calculateOptimalRoute =
+export const calculateOptimalRoute =
   ({ batchSize, predicate }) =>
   async ({ start, end, ...rest }) =>
     runDijkstra({
@@ -53,6 +53,8 @@ const calculateOptimalRoute =
       predicate,
     })(rest);
 
+export const countSteps = ({ path }) => path.length - 1;
+
 runAsync(
   readRawData,
   parseMatrix,
@@ -61,4 +63,4 @@ runAsync(
   calculateOptimalRoute({
     batchSize: 1,
   })
-)("../2022/12/data/data").then(console.log);
+)("../2022/12/data/data").then(run(countSteps, console.log));

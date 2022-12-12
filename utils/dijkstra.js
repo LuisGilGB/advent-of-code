@@ -53,7 +53,7 @@ export const runDijkstra =
         const { destinations } = graphMap.get(node);
         alreadyVisited.add(node);
         if (node === end) {
-          resolve(itinerariesMap.get(node));
+          resolve({ matrix, ...itinerariesMap.get(node) });
         }
         destinations.forEach((destination) => {
           const destinationId = destination.id;
@@ -88,16 +88,5 @@ export const runDijkstra =
           resolve(runDijkstraStep(nextNode));
         }
       });
-    const result = await runDijkstraStep();
-    console.log(
-      sumArrayItems(
-        result.path
-          .map((node) => {
-            const [row, col] = node.split(",").map(numberify);
-            return matrix[row][col];
-          })
-          .filter((v, i) => i !== 0)
-      )
-    );
-    return result;
+    return runDijkstraStep();
   };

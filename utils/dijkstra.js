@@ -1,5 +1,4 @@
 import minPriorityQueueFactory from "./minPriorityQueue";
-import { numberify, sumArrayItems } from "./utils";
 
 export const builGraphdMapForDijkstra =
   (destinationPredicate = (currentValue, destinationValue) => ({})) =>

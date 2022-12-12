@@ -95,6 +95,15 @@ export const filterUniqueItems = (input) =>
 
 export const normalizeArray = map(normalizeNumber);
 
+export const intercalate = (inBetweenItem) => (array) =>
+  array.reduce((acc, item, i) => {
+    if (i > 0) {
+      acc.push(inBetweenItem);
+    }
+    acc.push(item);
+    return acc;
+  }, []);
+
 export const sumArrayItems = (input) =>
   input.reduce((acc, item) => acc + item, 0);
 
@@ -138,9 +147,13 @@ export const parseMatrixMappingBy = (fn) => (rawInput) =>
   )(rawInput);
 
 export const transpose = (matrix) =>
-  matrix.map((row, rowIndex) =>
-    row.map((cell, colIndex) => matrix[colIndex][rowIndex])
-  );
+  matrix
+    .map((row, rowIndex) =>
+      row
+        .map((cell, colIndex) => matrix?.[colIndex]?.[rowIndex])
+        .filter(Boolean)
+    )
+    .filter((row) => row.length);
 
 export const mapMatrixBy = (fn) => (matrix) => {
   const transposedMatrix = transpose(matrix);
@@ -159,6 +172,21 @@ export const mapMatrixBy = (fn) => (matrix) => {
       )
     )
   );
+};
+
+export const findInMatrix = (matrix) => (value) => {
+  let rowIndex, colIndex;
+  matrix.forEach((row, rowI) => {
+    if (rowIndex != null && colIndex != null) {
+      return;
+    }
+    const matchIndex = row.findIndex((readValue) => readValue === value);
+    if (matchIndex >= 0) {
+      rowIndex = rowI;
+      colIndex = matchIndex;
+    }
+  });
+  return rowIndex != null && colIndex != null ? [rowIndex, colIndex] : null;
 };
 
 export const checkEveryMatrixCellIsEqualTo = (targetValue) => (matrix) =>
@@ -203,5 +231,13 @@ export const calculateCloseProduct =
       0
     );
   };
+
+export const returnBasicPromise = (input) =>
+  new Promise((resolve) => resolve(input));
+
+export const runAsync =
+  (...fn) =>
+  (input) =>
+    run(...fn, returnBasicPromise)(input);
 
 export { default as minPriorityQueueFactory } from "./minPriorityQueue";

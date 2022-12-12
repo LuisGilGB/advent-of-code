@@ -13,10 +13,10 @@ const WORRINESS_REDUCTION_BY = 3;
 
 export const parseMonkeys = (rawInput) => rawInput.split("\n\n");
 
-const parseMonkeyId = (rawMonkey) =>
+export const parseMonkeyId = (rawMonkey) =>
   numberify(rawMonkey.slice("Monkey ".length, -1));
 
-const parseStartingItems = (rawStartingItems) =>
+export const parseStartingItems = (rawStartingItems) =>
   rawStartingItems
     .slice("  Starting items: ".length)
     .split(", ")
@@ -38,9 +38,9 @@ const parseTest = (rawTest) => {
   return (input) => input % divisor === 0;
 };
 
-const parseDestinationIfTrue = (rawTestTrue) =>
+export const parseDestinationIfTrue = (rawTestTrue) =>
   numberify(rawTestTrue.slice("    If true: throw to monkey ".length));
-const parseDestinationIfFalse = (rawTestFalse) =>
+export const parseDestinationIfFalse = (rawTestFalse) =>
   numberify(rawTestFalse.slice("    If false: throw to monkey ".length));
 
 export const parseMonkeyTurn = (rawMonkeyTurn) => {

@@ -71,6 +71,10 @@ export const getNth = (n) => (array) => array[n];
 
 export const getLast = (array) => array[array.length - 1];
 
+export const arraify = (input) => (Array.isArray(input) ? input : [input]);
+
+export const swap = (array) => [array[0], array[1]];
+
 export const sumRecursivelyToZero = (input) =>
   input <= 0 ? 0 : input + sumRecursivelyToZero(input - 1);
 

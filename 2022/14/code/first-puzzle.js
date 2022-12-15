@@ -6,6 +6,7 @@ import {
   numberify,
   readRawData,
   run,
+  sumArrays,
 } from "../../../utils/utils";
 
 const POURING_PIXEL_LOCATION = [500, 0];
@@ -15,10 +16,10 @@ const AIR = ".";
 const SAND = "o";
 const POURING_PIXEL = "+";
 
-const parseTrace = (rawTrace) =>
+export const parseTrace = (rawTrace) =>
   rawTrace.split(" -> ").map((rawPixel) => rawPixel.split(",").map(numberify));
 
-const extractLinearTraces = (trace) =>
+export const extractLinearTraces = (trace) =>
   trace.reduce((acc, pixel, i, arr) => {
     if (i > 0) {
       acc.push([arr[i - 1], pixel]);
@@ -26,7 +27,7 @@ const extractLinearTraces = (trace) =>
     return acc;
   }, []);
 
-const getSliceMatrix = (rockLines) => {
+export const getSliceMatrix = (rockLines) => {
   const xLimits = rockLines
     .map((rockLine) => rockLine.map(([x, y]) => x))
     .flat();
@@ -59,7 +60,7 @@ const getCol = (pixel) => pixel[0];
 const isVertical = (rockLine) => getCol(rockLine[0]) === getCol(rockLine[1]);
 const isHorizontal = (rockLine) => getRow(rockLine[0]) === getRow(rockLine[1]);
 
-const findRocks = ({ rockLines, ...rest }) => ({
+export const findRocks = ({ rockLines, ...rest }) => ({
   ...rest,
   rocksSet: new Set(
     rockLines
@@ -91,18 +92,75 @@ const findRocks = ({ rockLines, ...rest }) => ({
   ),
 });
 
-const paintRocks = ({ rocksSet, sliceMatrix, xBoundaries, ...rest }) => {
-  return {
-    rocksSet,
-    sliceMatrix: mapMatrixBy((item, { colIndex, rowIndex }) => {
-      if (rocksSet.has(JSON.stringify([rowIndex, colIndex + xBoundaries[0]]))) {
-        return ROCK;
+export const paintRocks = ({
+  rocksSet,
+  sliceMatrix,
+  xBoundaries,
+  ...rest
+}) => ({
+  rocksSet,
+  xBoundaries,
+  sliceMatrix: mapMatrixBy((item, { colIndex, rowIndex }) => {
+    if (rocksSet.has(JSON.stringify([rowIndex, colIndex + xBoundaries[0]]))) {
+      return ROCK;
+    }
+    return item;
+  })(sliceMatrix),
+  ...rest,
+});
+
+const pour = ({ sliceMatrix, xBoundaries }) => {
+  const TRIES = [
+    [0, 1],
+    [-1, 1],
+    [1, 1],
+  ];
+
+  let position = POURING_PIXEL_LOCATION;
+  let blocked = false;
+  let outOfBoundaries = false;
+  while (!blocked && !outOfBoundaries) {
+    try {
+      const move = TRIES.find(([deltaCol, deltaRow]) =>
+        [AIR, undefined].includes(
+          sliceMatrix[position[1] + deltaRow][
+            position[0] + deltaCol - xBoundaries[0]
+          ]
+        )
+      );
+      if (!move) {
+        blocked = true;
+        sliceMatrix[position[1]][position[0] - xBoundaries[0]] = SAND;
+      } else {
+        position = sumArrays(position, move);
       }
-      return item;
-    })(sliceMatrix),
-    ...rest,
+    } catch (error) {
+      outOfBoundaries = true;
+    }
+  }
+
+  return {
+    position,
+    outOfBoundaries,
   };
 };
+
+export const runPouring = ({ sliceMatrix, xBoundaries }) => {
+  let outOfBoundaries = false;
+  let counter = 0;
+  while (!outOfBoundaries) {
+    outOfBoundaries = pour({ sliceMatrix, xBoundaries }).outOfBoundaries;
+    if (!outOfBoundaries) {
+      counter++;
+    }
+  }
+  return {
+    sliceMatrix,
+    counter,
+  };
+};
+
+export const getCount = ({ counter }) => counter;
 
 run(
   readRawData,
@@ -113,5 +171,7 @@ run(
   getSliceMatrix,
   findRocks,
   paintRocks,
+  runPouring,
+  getCount,
   console.log
-)("../2022/14/data/test-data");
+)("../2022/14/data/data");

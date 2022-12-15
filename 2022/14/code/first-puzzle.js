@@ -53,35 +53,53 @@ const getSliceMatrix = (rockLines) => {
   };
 };
 
-const isVertical = (rockLine) => rockLine[0][1] === rockLine[1][1];
-const isHorizontal = (rockLine) => rockLine[0][0] === rockLine[1][0];
+const getRow = (pixel) => pixel[1];
+const getCol = (pixel) => pixel[0];
 
-const paintRocks = ({ rockLines, sliceMatrix, xBoundaries, ...rest }) => {
-  rockLines.forEach((rockLine) => {
-    mapMatrixBy((item, { colIndex, rowIndex }) => {
-      const verticalStart = Math.min(...rockLine.map((limit) => limit[1]));
-      const verticalEnd = Math.max(...rockLine.map((limit) => limit[1]));
-      const horizontalStart =
-        Math.min(...rockLine.map((limit) => limit[0])) - xBoundaries[0];
-      const horizontalEnd =
-        Math.max(...rockLine.map((limit) => limit[0])) - xBoundaries[0];
+const isVertical = (rockLine) => getCol(rockLine[0]) === getCol(rockLine[1]);
+const isHorizontal = (rockLine) => getRow(rockLine[0]) === getRow(rockLine[1]);
 
-      if (
-        rowIndex >= verticalStart &&
-        rowIndex < verticalEnd &&
-        colIndex >= horizontalStart &&
-        colIndex <= horizontalEnd
-      ) {
+const findRocks = ({ rockLines, ...rest }) => ({
+  ...rest,
+  rocksSet: new Set(
+    rockLines
+      .reduce((acc, rockLine) => {
+        const row1 = getRow(rockLine[0]);
+        const row2 = getRow(rockLine[1]);
+        const col1 = getCol(rockLine[0]);
+        const col2 = getCol(rockLine[1]);
+        if (isVertical(rockLine)) {
+          for (
+            let rowIndex = Math.min(row1, row2);
+            rowIndex <= Math.max(row1, row2);
+            rowIndex++
+          ) {
+            acc.push([rowIndex, col1]);
+          }
+        } else if (isHorizontal(rockLine)) {
+          for (
+            let colIndex = Math.min(col1, col2);
+            colIndex <= Math.max(col1, col2);
+            colIndex++
+          ) {
+            acc.push([row1, colIndex]);
+          }
+        }
+        return acc;
+      }, [])
+      .map(JSON.stringify)
+  ),
+});
+
+const paintRocks = ({ rocksSet, sliceMatrix, xBoundaries, ...rest }) => {
+  return {
+    rocksSet,
+    sliceMatrix: mapMatrixBy((item, { colIndex, rowIndex }) => {
+      if (rocksSet.has(JSON.stringify([rowIndex, colIndex + xBoundaries[0]]))) {
         return ROCK;
       }
       return item;
-    })(sliceMatrix);
-  });
-
-  return {
-    rockLines,
-    sliceMatrix,
-    xBoundaries,
+    })(sliceMatrix),
     ...rest,
   };
 };
@@ -93,6 +111,7 @@ run(
   map(extractLinearTraces),
   flatten,
   getSliceMatrix,
+  findRocks,
   paintRocks,
   console.log
 )("../2022/14/data/test-data");

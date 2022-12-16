@@ -9,12 +9,12 @@ import {
   sumArrays,
 } from "../../../utils/utils";
 
-const POURING_PIXEL_LOCATION = [500, 0];
+export const POURING_PIXEL_LOCATION = [500, 0];
 
-const ROCK = "#";
-const AIR = ".";
-const SAND = "o";
-const POURING_PIXEL = "+";
+export const ROCK = "#";
+export const AIR = ".";
+export const SAND = "o";
+export const POURING_PIXEL = "+";
 
 export const parseTrace = (rawTrace) =>
   rawTrace.split(" -> ").map((rawPixel) => rawPixel.split(",").map(numberify));
@@ -174,4 +174,4 @@ run(
   runPouring,
   getCount,
   console.log
-)("../2022/14/data/data");
+)("../2022/14/data/test-data");

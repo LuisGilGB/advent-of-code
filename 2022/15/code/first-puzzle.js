@@ -50,12 +50,12 @@ const beaconlessCellsAtRow = (rowIndex) => (sensorsData) => {
 
 const getSetSize = (set) => set.size;
 
-run(
-  readRawData,
-  extractNonEmptyLines,
-  map(parseLine),
-  map(splitSensorBeacon),
-  beaconlessCellsAtRow(2000000),
-  getSetSize,
-  console.log
-)("../2022/15/data/data");
+// run(
+//   readRawData,
+//   extractNonEmptyLines,
+//   map(parseLine),
+//   map(splitSensorBeacon),
+//   beaconlessCellsAtRow(2000000),
+//   getSetSize,
+//   console.log
+// )("../2022/15/data/data");

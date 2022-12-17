@@ -37,6 +37,11 @@ export const countBy =
 
 export const flatten = (array = []) => array.flat();
 
+export const mapField = (key, fn) => (input) => ({
+  ...input,
+  [key]: map(fn)(input[key]),
+});
+
 export const isTrue = (input) => !!input;
 export const isFalse = (input) => !input;
 
